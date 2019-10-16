@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: YouTube featured image for Gutenberg
-Plugin URI: 
-Description: 
+Plugin URI: https://github.com/webdevs-pro/youtube-featured-image/
+Description: This plugin automatically set post thumbnail by YouTube video URL in Gutenberg post editor
 Version: 1.0
 Author: Alex Ischenko
-Author URI: https://www.embedplus.com
+Author URI: https://github.com/webdevs-pro/
 */
 require_once ABSPATH . 'wp-admin/includes/media.php';
 require_once ABSPATH . 'wp-admin/includes/file.php';
