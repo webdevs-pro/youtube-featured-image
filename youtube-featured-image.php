@@ -22,6 +22,7 @@ require_once ABSPATH . 'wp-admin/includes/media.php';
 require_once ABSPATH . 'wp-admin/includes/file.php';
 require_once ABSPATH . 'wp-admin/includes/image.php';
 
+load_plugin_textdomain( 'youtube-featured-image', false, basename( dirname( __FILE__ ) ) . '/languages' ); 
 
 // enqueue script
 function yfi_enqueue() {
@@ -30,8 +31,17 @@ function yfi_enqueue() {
        plugins_url( 'youtube-featured-image.js', __FILE__ ),
        array( 'wp-i18n', 'wp-blocks', 'wp-edit-post', 'wp-element', 'wp-editor', 'wp-components', 'wp-data', 'wp-plugins', 'wp-edit-post' )
    );
+   // translation strings to pass to script
+   $translation_strings = array(
+      'label' => __("YouTube video link", 'youtube-featured-image'),
+      'help' => __("Paste URL to YouTube video to fetch image and set it as post featured image.", 'youtube-featured-image'),
+   );
+   wp_localize_script( 'youtube-featured-image-script', 'translation_strings', $translation_strings );
 }
 add_action( 'enqueue_block_editor_assets', 'yfi_enqueue' );
+
+
+
 
 // custom admin styles for daily reading
 function yfi_control_style_admin_head() {

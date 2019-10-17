@@ -6,9 +6,6 @@ const withSelect = wp.data.withSelect;
 const withDispatch = wp.data.withDispatch;
 const TextControl = wp.components.TextControl;
 const { __ } = wp.i18n;
- 
-
-
 
 wp.hooks.addFilter(
     'editor.PostFeaturedImage',
@@ -37,8 +34,6 @@ function wrapPostFeaturedImage( OriginalComponent ) {
     }
 }
 
-
-
 const YouTube_URL = wp.compose.compose(
 	withDispatch( function( dispatch, props ) {
 		return {
@@ -56,8 +51,8 @@ const YouTube_URL = wp.compose.compose(
 	} ) )( function( props ) {
 		return el( TextControl, {
 			className: 'yfi-control-container',
-			label: __("YouTube video link", 'youtube-featured-image'),
-			help: __("Paste URL to YouTube video to fetch image and set it as post featured image.", 'youtube-featured-image'),
+			label: translation_strings.label,
+			help: translation_strings.help,
 			value: props.metaValue,
 			onChange: function( content ) {
 				props.setMetaValue( content );
