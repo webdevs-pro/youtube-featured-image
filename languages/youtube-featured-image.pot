@@ -1,0 +1,20 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Package Name\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-10-17 12:01+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Domain: youtube-featured-image\n"
+
+#: youtube-featured-image.js:59
+msgid "YouTube video link"
+msgstr ""
+
+#: youtube-featured-image.js:60
+msgid "Paste URL to YouTube video to fetch image and set as featured."
+msgstr ""

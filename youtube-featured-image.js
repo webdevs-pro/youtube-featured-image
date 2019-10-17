@@ -5,6 +5,7 @@ const withState = wp.compose.withState;
 const withSelect = wp.data.withSelect;
 const withDispatch = wp.data.withDispatch;
 const TextControl = wp.components.TextControl;
+const { __ } = wp.i18n;
  
 
 
@@ -27,8 +28,7 @@ function wrapPostFeaturedImage( OriginalComponent ) {
                 ),
                 el( YouTube_URL,
 						{
-							metaKey: 'ai_youtube_featured_url',
-							title : 'YouTube url',
+							metaKey: 'yfi_url',
 						}
 					),
 
@@ -55,7 +55,9 @@ const YouTube_URL = wp.compose.compose(
 		}
 	} ) )( function( props ) {
 		return el( TextControl, {
-			label: props.title,
+			className: 'yfi-control-container',
+			label: __("YouTube video link", 'youtube-featured-image'),
+			help: __("Paste URL to YouTube video to fetch image and set it as post featured image.", 'youtube-featured-image'),
 			value: props.metaValue,
 			onChange: function( content ) {
 				props.setMetaValue( content );
