@@ -3,7 +3,7 @@
 Plugin Name: YouTube featured image for Gutenberg
 Plugin URI: https://github.com/webdevs-pro/youtube-featured-image/
 Description: This plugin automatically setup post thumbnail based on YouTube video URL in Gutenberg post editor
-Version: 1.0
+Version: 1.1
 Author: Alex Ischenko
 Author URI: https://github.com/webdevs-pro/
 Text Domain:  youtube-featured-image
@@ -75,7 +75,7 @@ add_action( 'init', 'yfi_register_meta' );
 function ai_set_youtube_featured_image( $post, $request ) {
 
    $youtube_field = get_post_meta($post->ID, 'yfi_url', true);
-
+   
    preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $youtube_field, $match);
 
    if( has_post_thumbnail($post->ID) || !$youtube_field || !$match[1] ) {
@@ -84,7 +84,8 @@ function ai_set_youtube_featured_image( $post, $request ) {
 
    $youtube_id = $match[1];
 
-   
+
+
    // get thumbnail
    $file_headers = get_headers( 'http://img.youtube.com/vi/' . $youtube_id . '/maxresdefault.jpg' );
    if (strpos($file_headers[0], '404 Not Found' ) == false ) {
@@ -92,7 +93,6 @@ function ai_set_youtube_featured_image( $post, $request ) {
    } else {
       $image_url = 'http://img.youtube.com/vi/' . $youtube_id . '/sddefault.jpg';         
    }
-
 
    // save temp image to server
    $image_extension = pathinfo( $image_url, PATHINFO_EXTENSION);
@@ -148,7 +148,18 @@ function ai_set_youtube_featured_image( $post, $request ) {
    
 
 }
-add_action('rest_after_insert_post', 'ai_set_youtube_featured_image', 10, 2);
+add_action( 'init', function() {
+   $post_types = get_post_types(['public'=>true]);
+   foreach ($post_types as $post_type) {
+      $hook_name = 'rest_after_insert_' . $post_type;
+      if ($post_type == 'attachment' || $post_type == 'elementor_library')  {
+         continue;
+      }
+      add_action($hook_name, 'ai_set_youtube_featured_image', 10, 2);
+   }
+}, 10);
+
+
 
 
 
@@ -188,6 +199,7 @@ function yfi_image_resize_dimensions( $nonsense, $orig_w, $orig_h, $dest_w, $des
       return false;
    return array( 0, 0, (int) $s_x, (int) $s_y, (int) $new_w, (int) $new_h, (int) $crop_w, (int) $crop_h );
 }
+
 
 
 
