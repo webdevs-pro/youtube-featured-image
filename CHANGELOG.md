@@ -1,6 +1,10 @@
 YouTube featured image for Gutenberg
 ====================================
 
+1.2.1
+-----
+- Fix: PHP error when non of post type selected
+
 1.2
 -----
 - New: Plugin settings page added
