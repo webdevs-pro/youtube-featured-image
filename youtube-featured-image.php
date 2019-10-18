@@ -3,7 +3,7 @@
 Plugin Name: YouTube featured image for Gutenberg
 Plugin URI: https://github.com/webdevs-pro/youtube-featured-image/
 Description: This plugin automatically setup post thumbnail based on YouTube video URL in Gutenberg post editor
-Version: 1.2.1
+Version: 1.2.2
 Author: Alex Ischenko
 Author URI: https://github.com/webdevs-pro/
 Text Domain:  youtube-featured-image
@@ -46,8 +46,11 @@ add_action( 'admin_init', function() {
    if ($post_types) {
 
       global $pagenow;
+      global $typenow;
 
-      if ((!empty($pagenow) && ('post-new.php' === $pagenow || 'post.php' === $pagenow )) && in_array(get_post_type( $_GET['post']), $post_types)) {
+      $type_now = $typenow ? $typenow : 'post';
+
+      if ((!empty($pagenow) && ('post-new.php' === $pagenow || 'post.php' === $pagenow )) && in_array($type_now, $post_types)) {
 
             // enqueue script
             function yfi_enqueue() {
@@ -162,10 +165,10 @@ function ai_set_youtube_featured_image( $post, $request ) {
 $post_types = get_option('yfi_post_types');
 if ( $post_types === false ) {
    $post_types = array('post');
-}
+} 
 if ($post_types) {
-   foreach ($post_types as $post_type) {
-      $hook_name = 'rest_after_insert_' . $post_type;
+   foreach ($post_types as $type) {
+      $hook_name = 'rest_after_insert_' . $type;
       add_action($hook_name, 'ai_set_youtube_featured_image', 10, 2);
    }
 }

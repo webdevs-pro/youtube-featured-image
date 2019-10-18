@@ -1,6 +1,10 @@
 YouTube featured image for Gutenberg
 ====================================
 
+1.2.2
+-----
+- Fix: No field on new post screen
+
 1.2.1
 -----
 - Fix: PHP error when non of post type selected
