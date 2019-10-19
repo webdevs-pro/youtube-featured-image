@@ -3,7 +3,7 @@
 Plugin Name: YouTube featured image for Gutenberg
 Plugin URI: https://github.com/webdevs-pro/youtube-featured-image/
 Description: This plugin automatically setup post thumbnail based on YouTube video URL in Gutenberg post editor
-Version: 1.2.2
+Version: 1.2.3
 Author: Alex Ischenko
 Author URI: https://github.com/webdevs-pro/
 Text Domain:  youtube-featured-image
@@ -45,38 +45,44 @@ add_action( 'admin_init', function() {
 
    if ($post_types) {
 
-      global $pagenow;
-      global $typenow;
+      // get current admin page
+      global $pagenow; 
 
-      $type_now = $typenow ? $typenow : 'post';
-
+      // get current post type 
+      global $typenow; 
+      $type_now = $typenow ? $typenow : 'post'; 
+      
+      // condition to add field only  to allowed post types
       if ((!empty($pagenow) && ('post-new.php' === $pagenow || 'post.php' === $pagenow )) && in_array($type_now, $post_types)) {
 
-            // enqueue script
-            function yfi_enqueue() {
-               wp_enqueue_script(
-                  'youtube-featured-image-script',
-                  plugins_url( 'youtube-featured-image.js', __FILE__ ),
-                  array( 'wp-i18n', 'wp-blocks', 'wp-edit-post', 'wp-element', 'wp-editor', 'wp-components', 'wp-data', 'wp-plugins', 'wp-edit-post' )
-               );
-               // translation strings to pass to script
-               $translation_strings = array(
-                  'label' => __("YouTube video link", 'youtube-featured-image'),
-                  'help' => __("Paste URL to YouTube video to fetch image and set it as post featured image.", 'youtube-featured-image'),
-               );
-               wp_localize_script( 'youtube-featured-image-script', 'translation_strings', $translation_strings );
-            }
-            add_action( 'enqueue_block_editor_assets', 'yfi_enqueue' );
-         
-            // custom admin styles for daily reading
-            function yfi_control_style_admin_head() {
-               echo '<style type="text/css">
-                  .yfi-control-container {
-                     margin-top: 20px;
-                  }
-               </style>';
-            }
-            add_action('admin_head', 'yfi_control_style_admin_head');
+         // we on gutenberg post editor
+         // enqueue script
+         function yfi_enqueue() {
+            wp_enqueue_script(
+               'youtube-featured-image-script',
+               plugins_url( 'youtube-featured-image.js', __FILE__ ),
+               array( 'wp-i18n', 'wp-blocks', 'wp-edit-post', 'wp-element', 'wp-editor', 'wp-components', 'wp-data', 'wp-plugins', 'wp-edit-post' )
+            );
+
+            // translation strings to pass to script
+            $translation_strings = array(
+               'label' => __("YouTube video link", 'youtube-featured-image'),
+               'help' => __("Paste URL to YouTube video to fetch image and set it as post featured image.", 'youtube-featured-image'),
+            );
+            wp_localize_script( 'youtube-featured-image-script', 'translation_strings', $translation_strings );
+         }
+         add_action( 'enqueue_block_editor_assets', 'yfi_enqueue' );
+      
+         // custom admin styles for daily reading
+         // add margin-top to our field
+         function yfi_control_style_admin_head() {
+            echo '<style type="text/css">
+               .yfi-control-container {
+                  margin-top: 20px;
+               }
+            </style>';
+         }
+         add_action('admin_head', 'yfi_control_style_admin_head');
       
       }
 
@@ -90,20 +96,24 @@ function ai_set_youtube_featured_image( $post, $request ) {
 
    $youtube_field = get_post_meta($post->ID, 'yfi_url', true);
    
+
+
    preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $youtube_field, $match);
 
-   if( has_post_thumbnail($post->ID) || !$youtube_field || !$match[1] ) {
+   if( has_post_thumbnail($post->ID) || !$youtube_field || !array_key_exists(1, $match) ) {
       return;
    }
-
+   
    $youtube_id = $match[1];
 
+
    // get thumbnail
-   $file_headers = get_headers( 'http://img.youtube.com/vi/' . $youtube_id . '/maxresdefault.jpg' );
-   if (strpos($file_headers[0], '404 Not Found' ) == false ) {
+   if ( strpos(get_headers( 'http://img.youtube.com/vi/' . $youtube_id . '/maxresdefault.jpg' )[0], '404 Not Found' ) == false ) {
       $image_url = 'http://img.youtube.com/vi/' . $youtube_id . '/maxresdefault.jpg';
-   } else {
+   } elseif ( strpos(get_headers( 'http://img.youtube.com/vi/' . $youtube_id . '/sddefault.jpg' )[0], '404 Not Found' ) == false ) {
       $image_url = 'http://img.youtube.com/vi/' . $youtube_id . '/sddefault.jpg';         
+   } else {
+      $image_url = 'http://img.youtube.com/vi/' . $youtube_id . '/hqdefault.jpg';  
    }
 
    require_once ABSPATH . 'wp-admin/includes/media.php';
@@ -131,6 +141,7 @@ function ai_set_youtube_featured_image( $post, $request ) {
    }
    remove_filter( 'image_resize_dimensions', 'yfi_image_resize_dimensions', 1, 6);	
 
+   // upload image to wordpress
    $image_contents = file_get_contents($_SERVER['DOCUMENT_ROOT'] . $temp_file_name);
    $upload = wp_upload_bits( $temp_file_name, null, $image_contents );
    wp_delete_file( $_SERVER['DOCUMENT_ROOT'] . $temp_file_name );

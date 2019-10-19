@@ -1,6 +1,10 @@
 YouTube featured image for Gutenberg
 ====================================
 
+1.2.3
+-----
+- Fix: Incorect video image in some cases
+
 1.2.2
 -----
 - Fix: No field on new post screen
