@@ -1,6 +1,10 @@
 YouTube featured image for Gutenberg
 ====================================
 
+1.2.4
+-----
+- Tweak: Plugin updater updated to v. 4.8.1
+
 1.2.3
 -----
 - Fix: Incorect video image in some cases
