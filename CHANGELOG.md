@@ -1,6 +1,10 @@
 YouTube featured image for Gutenberg
 ====================================
 
+1.2.5
+-----
+- Fix: Temporary upload folder changed from root folder to WP Uploads folder to prevent issues on some hostings
+
 1.2.4
 -----
 - Tweak: Plugin updater updated to v. 4.8.1

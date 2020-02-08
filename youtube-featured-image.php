@@ -3,7 +3,7 @@
 Plugin Name: YouTube featured image for Gutenberg
 Plugin URI: https://github.com/webdevs-pro/youtube-featured-image/
 Description: This plugin automatically setup post thumbnail based on YouTube video URL in Gutenberg post editor
-Version: 1.2.4
+Version: 1.2.5
 Author: Alex Ischenko
 Author URI: https://github.com/webdevs-pro/
 Text Domain:  youtube-featured-image
@@ -122,11 +122,14 @@ function ai_set_youtube_featured_image( $post, $request ) {
    $temp_file_name = $youtube_id . '.' . $image_extension;
    $response = wp_remote_get( $image_url );
    $image_contents = $response['body'];
-   file_put_contents( $_SERVER['DOCUMENT_ROOT'] . $temp_file_name, $image_contents);
+
+   $dir = wp_get_upload_dir();
+
+   file_put_contents( $dir['basedir'] . '/' . $temp_file_name, $image_contents);
 
    // crop and resize image
    add_filter( 'image_resize_dimensions', 'yfi_image_resize_dimensions', 1, 6);	
-   $image = wp_get_image_editor( $_SERVER['DOCUMENT_ROOT'] . $temp_file_name );
+   $image = wp_get_image_editor( $dir['basedir'] . '/' . $temp_file_name );
    if ( !is_wp_error( $image ) ) {
       $old_size = $image->get_size();
       $old_width = $old_size['width'];
@@ -134,12 +137,12 @@ function ai_set_youtube_featured_image( $post, $request ) {
       // $image->resize( $old_width, $new_height, true );
       $image->resize( $old_width, $new_height, YFI_CROP );
       $image->resize( YFI_WIDTH, YFI_HEIGHT, false );
-      $image->save( $_SERVER['DOCUMENT_ROOT'] . $temp_file_name );
+      $image->save( $dir['basedir'] . '/' . $temp_file_name );
    }
    remove_filter( 'image_resize_dimensions', 'yfi_image_resize_dimensions', 1, 6);	
 
    // upload image to wordpress
-   $image_contents = file_get_contents($_SERVER['DOCUMENT_ROOT'] . $temp_file_name);
+   $image_contents = file_get_contents($dir['basedir'] . '/' . $temp_file_name);
    $upload = wp_upload_bits( $temp_file_name, null, $image_contents );
    wp_delete_file( $_SERVER['DOCUMENT_ROOT'] . $temp_file_name );
 
