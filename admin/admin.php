@@ -1,5 +1,13 @@
 <?php 
 
+// plugin settings link in plugins admin page
+add_filter('plugin_action_links_' . YFI_PLUGIN_BASENAME, function ( $links ) {
+	$settings_link = '<a href="' . admin_url( 'options-general.php?page=yfi_options' ) . '">' . __('Settings') . '</a>';
+
+	array_unshift( $links, $settings_link );
+	return $links;
+});
+
 /* ----------------------------------------------------------------------------- */
 /* Add Menu Page */
 /* ----------------------------------------------------------------------------- */ 

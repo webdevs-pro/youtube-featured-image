@@ -1,6 +1,10 @@
 YouTube featured image for Gutenberg
 ====================================
 
+1.2.6
+-----
+- New: Plugin settings link on plugins amin page
+
 1.2.5
 -----
 - Fix: Temporary upload folder changed from root folder to WP Uploads folder to prevent issues on some hostings
