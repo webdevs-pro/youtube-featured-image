@@ -1,6 +1,10 @@
 YouTube featured image for Gutenberg
 ====================================
 
+1.2.7
+-----
+- PUC updated to 4.9
+
 1.2.6
 -----
 - New: Plugin settings link on plugins amin page
