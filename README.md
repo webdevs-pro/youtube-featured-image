@@ -1,11 +1,10 @@
 YouTube featured image for Gutenberg
 ====================================
 
+This plugin automatically sets a post thumbnail from a YouTube video URL in the Gutenberg post editor.
 
-This plugin automatically set post thumbnail by YouTube video URL in Gutenberg post editor.
+The plugin will check YouTube maxresdefault.jpg first, if the video doesn't have a hi-res thumbnail, check sddefault.jpg and then hqdefault.jpg.
 
-First plugin check YouTube maxresdefault.jpg, if video dont has hi-res thumbnail then check for sddefault.jpg and then for hqdefault.jpg.
+The plugin also scales and crops the uploaded image to 1280x720 (16:9 aspect ratio).
 
-Also plugin scale and crop downloaded image to 1280x720 (16:9 ratio). 
-
-NOTICE! To work with CPT your CPT must have support "custom-fields".
+WARNING! To work with CPT, your CPT must have "custom fields" support.
